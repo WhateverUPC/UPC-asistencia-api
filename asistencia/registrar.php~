@@ -1,0 +1,50 @@
+<?php
+header("Content-Type:application/json");
+require_once "../connection/database.php";
+
+if(!$db) echo "db";
+
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+     //Get Data
+     $qr_code = isset($_POST['qr_code']) ? mysql_real_escape_string($_POST['qr_code']) : "";
+
+    $query = 'begin "PK_ASISTENCIA"."SP_GRABAR"(:I_ID_MTRI, :I_ASIS_FECHA, :I_ASIS_HORAENTRADA, :I_ASIS_HORASALIDA, :I_CTLG_ASISTENCIA, :I_AUDT_USUARIO, :I_ID_AREA); end;';
+     
+     $date = strtotime("08/03/2018");
+     
+     $stmt = oci_parse($db, $query);
+     
+     $id_mtri = "000043106";
+     $asis_fecha = date("d/m/Y", $date);
+	echo $asis_fecha;
+     $asis_hentrada = "08:00";
+     $asis_hsalida = "12:00";
+     $asis_ctlgasis = "0107701";
+     $audt_usuario = "00704";
+     $id_area = null;
+
+     oci_bind_by_name($stmt, ":I_ID_MTRI", $id_mtri);
+     oci_bind_by_name($stmt, ":I_ASIS_FECHA", $asis_fecha);
+     oci_bind_by_name($stmt, ":I_ASIS_HORAENTRADA", $asis_hentrada);
+     oci_bind_by_name($stmt, ":I_ASIS_HORASALIDA", $asis_hsalida);
+     oci_bind_by_name($stmt, ":I_CTLG_ASISTENCIA", $asis_ctlgasis);
+     oci_bind_by_name($stmt, ":I_AUDT_USUARIO", $audt_usuario);
+     oci_bind_by_name($stmt, ":I_ID_AREA", $id_area);
+
+     oci_execute($stmt);
+	
+     $e = oci_error($stmt);
+     print htmlentities($e['message']);
+     $response = array("status" => 1,
+                       "message" => "Success",
+                       "data" => 1);
+}
+else{
+     $response = array("status" => 0,
+                       "message" => "Request method not accepted",
+                       "data" => 0);
+}
+
+header("Content-Type: application/json");
+echo json_encode($response);
+?>

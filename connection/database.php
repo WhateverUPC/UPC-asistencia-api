@@ -1,0 +1,6 @@
+<?php
+$tnsname = '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=168.121.239.34)(PORT=1521))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=orcl)))';
+
+$db = oci_connect("umayux", "1Ux23456**++", $tnsname, "AL32UTF8");
+
+?>
